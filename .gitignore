@@ -1,0 +1,122 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+.pytest_cache/
+.coverage
+*.cover
+.hypothesis/
+.tox/
+.nox/
+.mypy_cache/
+.dmypy.json
+dmypy.json
+.pyre/
+.ruff_cache/
+
+# Virtual Environments
+venv/
+ENV/
+env/
+.venv
+
+# Weights & Biases
+wandb/
+*.wandb
+wandb-debug.log
+wandb-summary.json
+wandb-metadata.json
+
+# Model outputs and checkpoints
+grpo_*/
+checkpoint-*/
+*.pt
+*.pth
+*.bin
+*.safetensors
+*.ckpt
+model_outputs/
+saved_models/
+final_model/
+
+# Data files (uncomment if you don't want to track data)
+# data/
+# *.jsonl
+# *.json
+# *.csv
+# *.tsv
+
+# Logs
+logs/
+*.log
+output.log
+debug.log
+*.out
+*.err
+
+# Plotting outputs
+plots/
+*.png
+*.jpg
+*.jpeg
+*.pdf
+*.svg
+completions/
+
+# Accelerate
+accelerate_config.yaml
+
+# Jupyter Notebooks
+*.ipynb_checkpoints
+.ipynb_checkpoints/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# SLURM outputs
+slurm-*.out
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+*.bak
+*.backup
+*.cache
+
+# Environment variables
+.env
+.env.local
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Custom outputs (from callbacks)
+completions/
+metrics_plots/
+training_artifacts/
