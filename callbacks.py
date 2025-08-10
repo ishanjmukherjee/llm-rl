@@ -136,6 +136,9 @@ class AsyncMetricsPlotterCallback(TrainerCallback):
         self.plot_dir = self.base_dir / self.run_id
         self.plot_dir.mkdir(parents=True, exist_ok=True)
 
+        # Update latest symlink to point to this run directory
+        self._update_latest_symlink()
+
         # Default metrics to plot if none specified
         if metrics_to_plot is None:
             metrics_to_plot = [
@@ -151,6 +154,17 @@ class AsyncMetricsPlotterCallback(TrainerCallback):
         self.metrics_history = {metric: [] for metric in metrics_to_plot}
         self.steps = []
         self._lock = threading.Lock()
+
+    def _update_latest_symlink(self):
+        """Update the 'latest' symlink to point to the current run directory."""
+        latest_link = self.base_dir / "latest"
+
+        # Remove old symlink if it exists
+        if latest_link.exists() or latest_link.is_symlink():
+            latest_link.unlink()
+
+        # Create new symlink (relative path for portability)
+        latest_link.symlink_to(self.run_id)
 
     def on_log(self, args: TrainingArguments, state: TrainerState,
               control: TrainerControl, logs: Optional[Dict[str, float]] = None,
