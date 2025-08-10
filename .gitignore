@@ -58,7 +58,7 @@ saved_models/
 final_model/
 
 # Data files (uncomment if you don't want to track data)
-# data/
+data/
 # *.jsonl
 # *.json
 # *.csv
