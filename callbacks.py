@@ -155,7 +155,7 @@ class AsyncMetricsPlotterCallback(TrainerCallback):
     def on_log(self, args: TrainingArguments, state: TrainerState,
               control: TrainerControl, logs: Optional[Dict[str, float]] = None,
               **kwargs):
-        """Collect metrics on every log event."""
+        """Collect metrics on every log event and optionally plot."""
         if logs is None:
             return
 
@@ -179,9 +179,27 @@ class AsyncMetricsPlotterCallback(TrainerCallback):
                     # Append value (or None if not found)
                     self.metrics_history[metric_name].append(value)
 
+        # Plot on every log if plot_on_save is False
+        if not self.plot_on_save and step > 0:
+            # Copy data to avoid threading issues
+            with self._lock:
+                steps_copy = self.steps.copy()
+                metrics_copy = {k: v.copy() for k, v in self.metrics_history.items()}
+
+            if len(steps_copy) == 0:
+                return
+
+            # Plot asynchronously
+            thread = threading.Thread(
+                target=self._plot_metrics,
+                args=(steps_copy, metrics_copy, state.global_step)
+            )
+            thread.daemon = True
+            thread.start()
+
     def on_save(self, args: TrainingArguments, state: TrainerState,
                 control: TrainerControl, **kwargs):
-        """Plot metrics when model is saved (non-blocking)."""
+        """Plot metrics when model is saved (only if plot_on_save is True)."""
         if not self.plot_on_save:
             return
 

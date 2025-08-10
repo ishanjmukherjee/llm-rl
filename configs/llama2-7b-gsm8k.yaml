@@ -57,7 +57,7 @@ callbacks:
   metrics_plotter:
     enabled: true
     plot_dir: "plots"
-    plot_on_save: true  # Plot when model saves, not on every log
+    plot_on_save: false  # Plot when model saves, not on every log
     metrics_to_plot:
       - "train/grad_norm"
       - "train/reward"
