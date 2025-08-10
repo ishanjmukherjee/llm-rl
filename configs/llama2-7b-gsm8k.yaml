@@ -28,7 +28,7 @@ training:
   gradient_checkpointing: false
   warmup_steps: 10
   logging_steps: 1
-  save_steps: 200
+  save_steps: 100
   eval_strategy: "no"
   bf16: true
   report_to: "wandb"
@@ -47,3 +47,24 @@ training:
 wandb:
   project: "llama2-7b-gsm8k-grpo"
   enabled: true
+
+# Callback configuration
+callbacks:
+  completion_logger:
+    enabled: true
+    output_dir: "completions"
+
+  metrics_plotter:
+    enabled: true
+    plot_dir: "plots"
+    plot_on_save: true  # Plot when model saves, not on every log
+    metrics_to_plot:
+      - "train/grad_norm"
+      - "train/reward"
+      - "train/reward_std"
+      - "train/kl_divergence"
+      - "learning_rate"
+      - "train/loss"
+      - "train/entropy"
+      - "train/completions/mean_length"
+

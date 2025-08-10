@@ -17,8 +17,9 @@ from accelerate import Accelerator
 import wandb
 from tqdm import tqdm
 
-# Import reward functions
+# Import reward functions and callbacks
 from rewards import get_reward_functions
+from callbacks import CallbackRegistry
 
 
 def load_config(config_path):
@@ -71,10 +72,6 @@ def setup_model_and_tokenizer(config, accelerator):
     # Add attention implementation if specified
     if 'attn_implementation' in model_config:
         model_kwargs['attn_implementation'] = model_config['attn_implementation']
-
-    # Disable caching if gradient checkpointing is enabled
-    if config.get('training', {}).get('gradient_checkpointing', False):
-        model_kwargs['use_cache'] = False
 
     model = AutoModelForCausalLM.from_pretrained(model_name, **model_kwargs)
 
@@ -164,6 +161,11 @@ def main():
         reward_funcs=reward_funcs,
         train_dataset=dataset,
     )
+
+    # Add callbacks based on configuration
+    callbacks = CallbackRegistry.create_callbacks(config, config_path=args.config)
+    for callback in callbacks:
+        trainer.add_callback(callback)
 
     # Train
     print("Starting training...")
