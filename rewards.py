@@ -59,7 +59,7 @@ def length_reward(prompts, completions, **kwargs):
     rewards = []
     for completion in completions:
         # Penalize excessive brevity
-        if len(completion) < 30:
+        if len(completion) < 10:
             rewards.append(-0.5)
         else:
             # No penalty for longer completions
@@ -86,12 +86,13 @@ def step_by_step_reward(prompts, completions, **kwargs):
 def verbosity_penalty(prompts, completions, **kwargs):
     """Penalize overly verbose responses."""
     rewards = []
+    word_limit = 10
     for completion in completions:
         word_count = len(completion.split())
-        if word_count > 300:
+        if word_count > word_limit:
             # Logarithmic penalty for excessive length
-            penalty = -0.1 * (word_count - 300) / 100
-            rewards.append(max(penalty, -1.0))
+            penalty = -1 * (word_count - word_limit) / 100
+            rewards.append(max(penalty, -10.0))
         else:
             rewards.append(0.0)
     return rewards

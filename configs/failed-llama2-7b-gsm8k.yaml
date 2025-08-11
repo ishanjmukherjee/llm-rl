@@ -1,0 +1,70 @@
+# Model configuration
+model:
+  name: "meta-llama/Llama-2-7b-chat-hf"
+  torch_dtype: "bfloat16"
+  attn_implementation: "eager" # can change to flash_attention_2
+  trust_remote_code: true
+
+# Dataset configuration
+dataset:
+  train_file: "data/gsm8k_train.jsonl"
+
+# Reward functions to use (from rewards.py REWARD_REGISTRY)
+# Comment out or remove rewards to disable them
+rewards:
+  - accuracy      # Reward correct numerical answers
+  - format        # Reward proper #### formatting
+  # - length        # Penalize very short completions
+  # - step_by_step  # Reward step-by-step reasoning
+  - verbosity_penalty  # Penalize overly long responses
+
+# Training configuration
+training:
+  output_dir: "./grpo_llama2-7b_gsm8k"
+  learning_rate: 5e-6
+  lr_scheduler_type: "constant_with_warmup"
+  per_device_train_batch_size: 4
+  num_train_epochs: 1
+  gradient_checkpointing: false
+  warmup_steps: 10
+  logging_steps: 1
+  save_steps: 100
+  eval_strategy: "no"
+  bf16: true
+  report_to: "wandb"
+  remove_unused_columns: false
+
+  # GRPO specific settings
+  num_generations: 4  # Number of completions per prompt
+  temperature: 0.7
+  max_completion_length: 512
+  max_prompt_length: 512
+  disable_dropout: true  # Important for consistent generation
+  loss_type: "dr_grpo"
+  log_completions: true
+
+# Wandb configuration
+wandb:
+  project: "llama2-7b-gsm8k-grpo"
+  enabled: true
+
+# Callback configuration
+callbacks:
+  completion_logger:
+    enabled: true
+    output_dir: "completions"
+
+  metrics_plotter:
+    enabled: true
+    plot_dir: "plots"
+    plot_on_save: false  # Plot when model saves, not on every log
+    metrics_to_plot:
+      - "train/grad_norm"
+      - "train/reward"
+      - "train/reward_std"
+      - "train/kl_divergence"
+      - "learning_rate"
+      - "train/loss"
+      - "train/entropy"
+      - "train/completions/mean_length"
+
