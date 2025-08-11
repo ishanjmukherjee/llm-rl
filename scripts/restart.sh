@@ -6,7 +6,7 @@ REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")"/.. && pwd)"
 cd "$REPO_ROOT"
 
 ENV_PATH="/home/ubuntu/anaconda3/envs/grpo"
-CFG_PATH="configs/qwen2.5-3b-gsm8k.yaml"
+CFG_PATH="configs/failed-llama2-7b-gsm8k.yaml"
 
 # Stop any running training job (ignore if none running)
 pkill -f "python train.py --config ${CFG_PATH}" || true
