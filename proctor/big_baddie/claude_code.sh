@@ -1,0 +1,1 @@
+claude -p "explain why latest PPO training run can cause reward collapse, even with kl reward penalty and kl = 0 over training. fix the offending config with a minimal, surgical fix." --permission-mode bypassPermissions --verbose --model sonnet --dangerously-skip-permissions
