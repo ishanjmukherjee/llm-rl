@@ -369,6 +369,7 @@ def escalate_to_claude(summary: str, context_paths: List[str]) -> None:
         if not os.path.isfile(script_path):
             logging.error(f"Claude script not found: {script_path}")
             return
+        # Ensure it's executable (not strictly required when calling via bash)
         try:
             st = os.stat(script_path)
             if not (st.st_mode & 0o111):
@@ -378,8 +379,9 @@ def escalate_to_claude(summary: str, context_paths: List[str]) -> None:
         env = os.environ.copy()
         env["CLAUDE_SUMMARY"] = (summary or "")[:4000]
         env["CLAUDE_CONTEXT"] = "\n".join(context_paths[:50])
+        # Call explicitly via bash and capture output
         proc = subprocess.run(
-            [script_path],
+            ["bash", script_path],
             cwd=os.path.dirname(script_path),
             env=env,
             capture_output=True,
@@ -468,7 +470,7 @@ def main() -> int:
                 context_paths.append(table_path)
             if latest_graph:
                 context_paths.append(latest_graph)
-            escalate_to_claude(analysis, context_paths)
+            # escalate_to_claude(analysis, context_paths)
             wake_up_user(analysis, run_dir_name, context_paths)
         else:
             logging.info("Decision: No escalation.")

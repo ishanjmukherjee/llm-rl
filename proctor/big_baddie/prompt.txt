@@ -1,0 +1,3 @@
+Read wandb/latest-run plots, files/media (for reasoning traces, which can be long), and run-*.wandb (and run python tools/wand_dump.py) to get the text  version. Evaluate current training progress to determine if the training run has failed or is severely unhealthy.
+
+If so, restart training run to with decrease LR by 20%. Command is "TAIL_LOGS=1 bash scripts/restart.sh". Check health of restart. Make sure not to start interactive cmds (i.e. tail) that don't exit in short time.
